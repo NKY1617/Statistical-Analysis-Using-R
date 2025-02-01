@@ -1,0 +1,87 @@
+---
+title: 'Part1: Descriptive Statistical Analysis of Dataset'
+author: "Naveen Kumar Yadav"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r}
+
+getwd()
+
+setwd('/Users/naveenyadav/Documents/rdocs/')
+
+# Select a library
+library(readr)
+
+# Assigning a variable Churn_data to run read.csv function and import csv file into R as a data frame.
+Churn_data <- read_csv('Churn.csv')
+
+# to run head function and retrieve first 10 rows from file
+head(Churn_data, n = 10)
+
+# to run tail function and retrieve last 10 rows from file.
+tail(Churn_data, n = 10)
+
+# Running Spec() to get preview of the column types
+spec(Churn_data)
+
+# Running str() to display the structure of R.
+str(Churn_data)
+
+#used dim to retrieve the dimensions
+dim(Churn_data)
+
+#Using Summary function to get the summary of an R object.
+summary(Churn_data)
+
+# to calculate mean of callfailures.
+mean_callfailures <- mean(Churn_data$CallFailures, na.rm = TRUE)
+print(mean_callfailures)
+
+# To calculate mean of all numeric columns
+numeric_columns <- Churn_data[sapply(Churn_data, is.numeric)]
+mean_allcolumns <- apply(numeric_columns,2,mean,na.rm = TRUE)
+print(mean_allcolumns)
+
+# To Calculate Median of Customer Support Calls.
+median_CSC <- median(Churn_data$CustomerSupportCalls, na.rm = TRUE)
+print(median_CSC)
+
+# To calculate median of all numeric columns
+med_allcolumns <- apply(numeric_columns,2,median,na.rm = TRUE)
+print(med_allcolumns)
+
+# To Calculate mode of the numeric columns in dataset.
+
+#define a funcion as get_modes.
+
+get_modes <- function(Churn_data) {
+  
+# Find unique values
+uniq_Churn_data <- unique(Churn_data)
+
+# Count the frequency of each unique value
+freq <- tabulate(match(Churn_data, uniq_Churn_data))
+
+# Return all values with the highest frequency
+modes <- uniq_Churn_data[freq == max(freq)]
+
+return(modes)
+}
+# To get mode of specific column: SubscriptionLenth
+mode_SL <- get_modes(Churn_data$SubscriptionLength)
+
+print(mode_SL)
+
+#Assign a variable to get all Na values in dataset.
+missing_values <- is.na(Churn_data)
+
+#To get sum of all the missing values in dataset
+sum(missing_values)
+
+# Show the number of missing values per column
+missing_per_column <- colSums(missing_values)
+print(missing_per_column)
+
+```

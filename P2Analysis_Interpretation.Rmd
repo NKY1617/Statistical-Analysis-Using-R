@@ -1,0 +1,210 @@
+---
+title: "Descriptive Statistics of Analysis"
+author: "Naveen Kumar Yadav"
+date: "2025-01-24"
+output: html_document
+---
+
+# 1. Introduction
+
+This R Markdown provides a descriptive statistical analysis of the `Churn.csv` dataset. I've explored various statistical measures including the mean, median, mode, and summary statistics of key variables. Agenda behind this, is to better understand the data and its nature.
+
+# 2. Load and Inspect Data
+
+I started by loading the necessary libraries and reading the CSV file into R.
+
+```{r load_data}
+getwd()
+# Set the working directory and load the required library 
+setwd('/Users/naveenyadav/Documents/rdocs/') 
+
+library(readr)
+library(knitr)
+```
+
+```{r}
+# Load the dataset into a data frame
+Churn_data <- read_csv('Churn.csv')
+```
+
+### Interpretation: 
+
+The setwd() command ensures that R is looking in the correct folder for the dataset(Churn.csv) file. Library(readr) is used to make sure the readr package is effective in reading the dataset file. Created a variable Churn_data to store all the data of Churn.csv which will make it easy for later R coding process.
+
+## Display the first 10 rows of the dataset
+
+```{r first_10Rows_dataset}
+head(Churn_data, n = 10)
+```
+
+## Display the last 10 rows of the dataset
+
+```{r last_10Rows_dataset}
+tail(Churn_data, n = 10)
+```
+
+### Interpretation:
+
+The head() and tail() functions provide a snapshot of the dataset. Displayed the first and last 10 rows to understand the structure and the types of data we are working with.
+
+# 3. Data Structure Overview
+
+## Get the preview of the column types using spec()
+
+```{r dataset_Specifications}
+spec(Churn_data)
+```
+
+## View the structure of the dataset
+
+```{r dataset_structure}
+str(Churn_data)
+```
+
+### Interpretation:
+
+The spec() and str() functions display the column types and the overall structure of the dataset. It helped me understand the kind of data each column holds (numeric, factor, etc.)
+
+## Get the dimensions of the dataset
+
+```{r dataset_dimension}
+dim(Churn_data)
+```
+
+### Interpretation:
+
+The dim() function provides the number of rows and columns in the dataset. This tells us the size of the dataset and how many features it contains.
+
+## Generate summary statistics of the dataset
+
+\\ To get complete summary of Churn dataset.
+
+```{r Dataset_Summary}
+# Summary of complete dataset.
+summary(Churn_data)
+```
+
+### Interpretation:
+
+This chunk contains summary() function. With the help of this function, we can understand the summary and statistical values of all the data column such as mean, median, min, max, 1st quartile & 3rd quartile.
+
+# 4. Descriptive Statistics
+
+To find out the statistical outputs of the dataset such as mean, mode and median.
+
+## To calculate Mean of Specific Column: 'CallFailures' column
+
+\\\To find the mean of only the CallFailures column.
+
+```{r mean_CallFailures}
+
+mean_callfailures <- mean(Churn_data$CallFailures, na.rm = TRUE)
+mean_callfailures
+```
+
+### Interpretation:
+
+On an average, 9.985 Calls failure recorded in the given Churn dataset.The mean of Call Failures gives an overall sense of how frequently customers experience call failures on average.
+
+## Mean of all numeric columns
+
+\\\To find mean for all the numeric columns within the Churn.csv dataset.
+
+```{r Mean_numeric_columns}
+
+numeric_columns <- Churn_data[sapply(Churn_data, is.numeric)]
+mean_allcolumns <- apply(numeric_columns,2,mean,na.rm = TRUE)
+print(mean_allcolumns)
+
+```
+
+### Interpretation:
+
+With the above chunk, we can extract the mean(average) of all the columns within the dataset. Output displays mean calculated of each column.
+
+## To find out Median of Customer Support Calls
+
+\\\to calculate the customer support calls median for the given dataset: Churn.csv
+
+```{r median_customer_support_calls}
+
+median_CSC <- median(Churn_data$CustomerSupportCalls, na.rm = TRUE)
+print(median_CSC)
+```
+
+### Interpretation:
+
+With the above chunk, We can find the median of Customer support calls made as per the dataset, median for CustomerSuppportCalls is 2. it means that half of the customers in the dataset have made 2 or fewer calls to customer support, and the other half have made 2 or more calls.
+
+## To find out Median of all the numeric columns and get output
+
+\\\This will fetch us median for all the columns
+
+```{r median_numeric_columns}
+
+med_allcolumns <- apply(numeric_columns,2,median,na.rm = TRUE)
+print(med_allcolumns)
+
+```
+
+### Interpretation:
+
+With the above chunk, we can extract the median of all the columns within the dataset. Output displays median calculated of each column.
+
+## Mode of any numeric column such as "Subscription Length"
+
+\\\To find the mode of any numeric column
+
+```{r mode of SubscriptionLen}
+# Define a function to calculate the mode
+get_modes <- function(Churn_data) {
+  
+# Find unique values
+uniq_Churn_data <- unique(Churn_data)
+
+# Count the frequency of each unique value
+freq <- tabulate(match(Churn_data, uniq_Churn_data))
+
+# Return all values with the highest frequency
+modes <- uniq_Churn_data[freq == max(freq)]
+
+return(modes)
+}
+
+# To get mode of specific column: SubscriptionLenth
+
+mode_SL <- get_modes(Churn_data$SubscriptionLength)
+
+print(mode_SL) 
+```
+
+### Interpretation:
+
+In the above chunk, created a function get_modes() to calculate the mode of any given dataset (or column). Then, the function is called specifically on the SubscriptionLength column in the Churn_data dataset. The result (mode of SubscriptionLength) is stored in the variable mode_SL and then printed. The mode of SubscriptionLength is 12. So, 12 months is the most common subscription length among the customers in the dataset. If 12 months is the mode, it means that annual subscriptions are the most popular option among the customers.
+
+## Missing Values Analysis
+
+\\\To check entire missing values in the dataset.
+
+```{r missing_values_Check, echo=FALSE}
+# Check for sum of total missing values in the entire dataset
+missing_values <- is.na(Churn_data)
+sum(missing_values)
+```
+
+### Interpretation:
+
+This code checks for missing values in the Churn_data dataset and stores the result in a logical matrix (missing_values). It indicates TRUE for missing values and FALSE if there are no missing values. Output for the above chunk is FALSE. Thus, there are no missing values in the dataset.
+
+\\\To Check Number of missing values per column in the dataset.
+
+```{r missing_values_percolumn }
+# Show the number of missing values per column
+
+missing_per_column <- colSums(missing_values)
+print(missing_per_column)
+```
+
+### Interpretation:
+
+Above Chunk, displays count of missing values in each column. Output for the above code is 0 for all the column. Thus, there are no missing values through out the dataset.

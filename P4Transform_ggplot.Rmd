@@ -1,0 +1,58 @@
+---
+title: 'Transformation of Variable: Monthly Charges'
+author: "Naveen Kumar Yadav"
+date: "2025-01-26"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+## Introduction:
+
+\\\This is an R Markdown document provided with detailed breakdown R Code to transform monthly Charges variable into log() and create a plot for log transformed variable.
+
+## Load Library and Dataset:
+
+I started by loading the necessary libraries and reading the CSV file into R.
+
+```{r}
+getwd()
+setwd('/Users/NaveenYadav/Documents/rdocs/')
+library(readr)
+library(tinytex)
+Churn_data <- read_csv('Churn.csv')
+```
+
+## Loaded required library & Log transformed the Variable:
+
+```{r}
+# Load necessary libraries
+
+library(ggplot2)
+
+# Load the Churn dataset with first 10 rows.
+
+head(Churn_data, n = 10)
+
+# Log-transform the 'MonthlyCharges' variable using natural log
+
+log_MonthlyCharges <- log(Churn_data$MonthlyCharges)
+```
+
+## Plot a histogram graph for log Transformed Monthly Charges Vs Frequency:
+
+```{r}
+# Create a plot for the log-transformed MonthlyCharges variable
+
+ggplot(Churn_data, aes(x = log_MonthlyCharges)) +
+  geom_histogram(binwidth = 0.1, fill = 'green', color = 'black', alpha = 0.7) +
+  labs(
+    title = "Log-Transformed Monthly Charges",
+    x = "Log of Monthly Charges",
+    y = "Frequency"
+  ) +
+  theme_minimal() # To have a faded background in histogram
+```
+
+## Interpretation:
+The histogram displays the distribution of the log-transformed Monthly Charges from the dataset. By applying a log transformation to the original data, we aim to reduce skewness and make the distribution more symmetric. The majority of customers have log-transformed monthly charges between 4.0 and 4.5, as there is higher frequency of customers in this range. This can be helpful to create monthly subscription plans which is mostly liked by the customers to increase subscription tendency.

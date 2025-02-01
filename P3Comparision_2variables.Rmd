@@ -1,0 +1,89 @@
+---
+title: 'Comparision of Two Variables: DataUsage Vs Churn & CustomerSupportCall Vs Churn'
+author: "Naveen Kumar Yadav"
+date: "2025-01-26"
+output: html_document
+---
+
+# 1. Introduction
+
+This R Markdown provides a comparision of two variables based on summary statistics and visualization of the `Churn.csv` dataset. I've used data frame and select command to get another table created to get selected variables columns. This comparision gives understanding on how data usage impacts tendency of customer continuing or leaving the services. Another comparision done by visualization method for Customer Support call and Churn.
+
+# 2. Load Required library package and dataset to read data.
+```{r Read Dataset}
+# Load the necessary library for comparision of 2 variables.
+library(readr)
+# Read csv file dataset into the variable Churn_data
+churn_data <- read_csv('/Users/NaveenYadav/Documents/rdocs/Churn.csv')
+head(churn_data)
+```
+
+# 3. Load Required package and Created a Table with comparision Columns.
+```{r}
+# Select the variables DataUsage and Churn and create new table stored in Comparision_Columns.
+library(dplyr)
+Comparision_Columns <- churn_data %>% select(DataUsage,Churn)
+# View the first 10 rows of the selected data
+head(Comparision_Columns, n = 10)
+```
+
+# 4. To get Summary Statistics for Column DataUsage.
+```{r}
+# Summary statistics for DataUsage
+summary(Comparision_Columns$DataUsage)
+```
+
+# 5. DataUsage Output Explanation
+The summary() of DataUsage has below mentioned insights:
+\\\Min(The smallest data usage value): 0.04479
+\\\Max(The highest data usage value): 2.45883
+\\\Mean(The average data usage across all customers): 5.09635
+1st Qu. (25%) and 3rd Qu. (75%): Indicating the spread of data usage across customers.
+
+# 6. To get Summary Statistics for Churn Column(counts & Proportions)
+
+```{r}
+
+# Summary statistics for Churn (counts and proportions)
+
+# Displays the number of churned (Churn = 1) and non-churned (Churn = 0) customers.
+
+table(Comparision_Columns$Churn)
+
+#To get proportion of churned vs. non-churned customers
+
+prop.table(table(Comparision_Columns$Churn))
+```
+
+# 7. Churn Output Explanation:
+\\\Churn is binary data 0,1 represents customer has left the service or not Whereas Data usage represents data used by customers.
+\\\Frequency Table: Displays the number of churned (Churn = 1) and non-churned (Churn = 0) customers.:   496: 0   504: 1 
+\\\Proportion Table: Gives you the proportion of churned vs. non-churned customers in the dataset.: 0.496: 0 0.504: 1
+
+##. Interpretation: 
+Based on the statiscal comparision done with the help of data frame, we can interprete that Customer with the higher Data Usage are less likely to churn. Average Data Usage based on summary is 5.09 whereas out of thousand customer 496 are churn = '0' and 504 are churn = '1'. Thus, more customers have left the services than the those who are continuing with the service.
+
+#8. Visualization of CustomerSupportCall and it's impact on Churn
+
+```{r}
+library(ggplot2)
+
+# Log-transform the 'VoiceMinutes' variable using natural log
+
+Sqroot_VM <- sqrt(churn_data$VoiceMinutes)
+
+# Convert Churn to a factor if not already
+churn_data$Churn <- as.factor(churn_data$Churn)
+
+# Create the box plot
+ggplot(churn_data, aes(x = Churn, y = Sqroot_VM, fill = Churn)) +
+  geom_boxplot() +
+  labs(title = "Box Plot of Sqrt-Transformed Voice Minutes by Churn Status",
+       x = "Churn Status",
+       y = "Sqrt-Transformed Voice Minutes") +
+  theme_minimal() +
+  scale_fill_manual(values = c("green", "red"))
+
+```
+##. Interpretation: 
+Comparision done for Voice Minutes and Churn based on the Visualization with the help of box plot, we can interprete that Customers, who has higher voice minutes are less likely to churn, possibly due to higher engagement as the median voice minutes is slightly higher for non-churned customers compared to churned customers. This suggests that customers who use more voice minutes tend to stay with the company, while those with fewer voice minutes are more likely to churn.
